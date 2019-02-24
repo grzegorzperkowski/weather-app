@@ -1,14 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
+
 import "./App.css";
+import PlacePicker from "./components/PlacePicker";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header" />
-      </div>
-    );
-  }
+export default function App() {
+  return (
+    <div>
+      <header />
+      <PlacePicker />
+    </div>
+  );
 }
-
-export default App;

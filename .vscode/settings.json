@@ -1,0 +1,6 @@
+{
+  "deepscan.enable": true,
+  "jshint.options": {
+    "esversion": 6
+  }
+}
