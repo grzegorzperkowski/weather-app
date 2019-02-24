@@ -2,5 +2,11 @@
   "deepscan.enable": true,
   "jshint.options": {
     "esversion": 6
+  },
+  "eslint.options": {
+    "plugins": ["react-hooks"],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error"
+    }
   }
 }

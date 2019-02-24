@@ -30,7 +30,9 @@ export default class PlacePicker extends Component {
       return;
     }
 
-    const url = `http://autocomplete.geocoder.api.here.com/6.2/suggest.json?app_id=${APP_ID}&app_code=${APP_CODE}&query=${name}`;
+    const url = encodeURI(
+      `http://autocomplete.geocoder.api.here.com/6.2/suggest.json?app_id=${APP_ID}&app_code=${APP_CODE}&query=${name}`
+    );
     axios
       .get(url, {
         cancelToken: new CancelToken(function executor(c) {
@@ -39,16 +41,18 @@ export default class PlacePicker extends Component {
       })
       .then(result => {
         if (result.status === 200) {
+          console.log(result);
           const places = result.data.suggestions.map(e => ({
             label: e.label,
-            locationId: e.locationId
+            locationId: e.locationId,
+            city: e.city
           }));
 
           this.setState({ autocomplete: places });
         }
       })
       .catch(err => {
-        console.error("@@@@@", err);
+        console.error("Error getting info for place ", name, "\nError: ", err);
         this.setState({ autocomplete: [] });
       });
   };
@@ -59,17 +63,24 @@ export default class PlacePicker extends Component {
   };
 
   handleSelectedPlace = event => {
+    const placeId = event.currentTarget.attributes.id.value;
     const userSelected = this.state.autocomplete.find(
-      element => element.locationId === event.currentTarget.attributes.id.value
+      element => element.locationId === placeId
     );
     if (userSelected) {
-      this.setState({ name: userSelected.label, autocomplete: [] });
       this.cancelRequest();
+
+      this.setState({ name: userSelected.label, autocomplete: [] });
+      this.props.onPlaceSelected(userSelected.label);
+    } else {
+      alert("Cannot find place ", placeId);
     }
   };
   handleKayDown = event => {
     if (event.key === "Enter") {
       event.preventDefault();
+      this.props.onPlaceSelected(this.state.name);
+
       console.log(event.key);
     } else if (event.key === "Esc") {
       console.log(event.key);
